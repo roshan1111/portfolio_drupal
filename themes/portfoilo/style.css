@@ -1,0 +1,13 @@
+
+#footer{ /* site footer*/
+	margin-top: 25px;
+	padding-bottom:60px;
+	float: left;
+	width: 100%;
+	position:relative;
+	    background-color:red;
+    height: 5px;
+	padding-bottom:15px;
+	text-align:center;
+	width: 1019px;
+}

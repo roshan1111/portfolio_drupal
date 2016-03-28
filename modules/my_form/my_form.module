@@ -1,0 +1,164 @@
+<?php
+
+/**
+ * Implements hook_permission().
+ */
+function my_form_permission() {
+  return array(
+    'submit my_form' => array(
+      'title' => t('submit my_form'),
+      'description' => t('submit my_form.'),
+    ),
+
+	
+	'access my_form submissions' => array(
+      'title' => t('Access my_form submissions'),
+      'description' => t('Access the my_form submissions.'),
+    ),
+	
+	
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+ function my_form_menu() {
+    $items = array();
+    $items['my-form'] = array(
+	 'title' => 'Contact',
+	 'type' => MENU_NORMAL_ITEM,
+	 'access arguments' => array('submit my_form'),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('my_form_form'),
+    );
+	$items['form-submissions'] = array(
+	 'title' => 'MY Form submissions',
+	 'type' => MENU_NORMAL_ITEM,
+	 'access arguments' => array('access my_form submissions'),
+      'page callback' => 'my_form_submissions',
+      
+    );
+	
+	
+	
+    return $items;
+  }
+  
+  
+  /**
+ * my_form.
+ */
+  function my_form_form($form, &$form_state) {
+  
+  
+   $form['text'] = array(
+  '#type' => 'textfield',
+   '#title' => t('Name'),
+   '#size' => 60,
+   '#maxlength' => 128,
+   '#required' => TRUE,
+   '#description' => t('Please Enter Your Name'),
+  );
+  
+    $form['info'] = array(
+  '#type' => 'textfield',
+   '#title' => t('Email'),
+   '#size' => 60,
+   '#maxlength' => 128,
+   '#element_validate' => array('myelement_email_validate'),
+   '#required' => TRUE,
+   '#description' => t('Please Enter Email '),
+  );
+  
+  $form['number'] = array(
+  '#type' => 'textfield',
+   '#title' => t('Phone Number'),
+   '#size' => 10,
+   '#maxlength' => 10,
+   '#required' => TRUE,
+   '#description' => t('Please Enter a Valid Phone Number'),
+  );
+  
+   $form['subject'] = array(
+  '#type' => 'textfield',
+   '#title' => t('Subject'),
+   '#size' => 60,
+   '#maxlength' => 128,
+   '#required' => TRUE,
+   '#description' => t('Please Enter Subject'),
+  );
+  
+   $form['mytext'] = array(
+  '#type' => 'textarea',
+   '#title' => t('Message'),
+   '#default_value' => '',
+   '#required' => TRUE,
+   '#description' => t('Please Enter Your Message'),
+  );
+  
+  
+   $form['submit'] = array(
+   '#type' => 'submit',
+   '#value' => t('Submit'),  
+   );
+   return $form;
+  }
+  
+  /**
+ * numeric validator handler form
+ */
+function my_form_form_validate($form, &$form_state) {
+//print('<pre>'.print_r($form_state['values'],1).'</pre>');die();
+ if (!is_numeric($form_state ['values'] ['number'])){
+ form_set_error('number', t('You Must Enter a Valid Number'));
+ 
+ return False;
+    }
+	return TRUE;
+}
+
+
+/**
+ * email validator handler form
+ */
+function myelement_email_validate($element, &$form_state, $form) {
+  $value = $element['#value'];
+  if (!valid_email_address($value)) {
+    form_error($element, t('Please enter a valid email address.'));
+  }
+}
+
+function my_form_form_submit($form, &$form_state) {
+$fe_id = db_insert('my_form')
+->fields(array(
+'number' => $form_state['values']['number'],
+'text' => $form_state['values']['text'],
+'subject' => $form_state['values']['subject'],
+'info' => $form_state['values']['info'],
+'mytext' => $form_state['values']['mytext'],
+))
+->execute();
+drupal_set_message(t('Your Message Has Been Sent.'));
+}
+
+/**
+ * view the form submission
+ */
+ function my_form_submissions(){
+  $results = db_query("SELECT * FROM {my_form}");    
+
+  $header = array(t('id'),t('number'),t('text'),t('subject'),t('info'),t('mytext'));
+  $rows = array();
+  foreach($results as $reasult){
+      $rows[] = array(
+          check_plain ($reasult -> fe_id),
+         check_plain  ($reasult -> number),
+          check_plain ($reasult -> text),
+          check_plain ($reasult -> subject),
+         check_plain  ($reasult -> info),
+         check_plain  ($reasult -> mytext),
+      );
+  }
+  return theme('table', array('header' => $header, 'rows' => $rows));
+ }

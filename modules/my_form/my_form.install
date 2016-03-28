@@ -1,0 +1,70 @@
+
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+
+
+function my_form_schema() {
+ $schema = array();
+ 
+  $schema['my_form'] = array(
+    // Example (partial) specification for table "node".
+    'description' => 'form tables.',
+    'fields' => array(
+      'fe_id' => array(
+        'description' => 'The primary identifier for table.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'number' => array(
+        'description' => 'A filed for storing integer number.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'text' => array(
+        'description' => 'A filed for storing short string of text.',
+        'type' => 'varchar',
+        'length' => 55,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+	  
+	  'subject' => array(
+        'description' => 'A filed for storing short string of text.',
+        'type' => 'varchar',
+        'length' => 55,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+	  
+	    'info' => array(
+        'description' => 'A filed for storing short email text.',
+        'type' => 'varchar',
+        'length' => 55,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+	  
+	  'mytext' => array(
+        'description' => 'A field for longer text.',
+        'type' => 'text',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+
+	  
+    ),
+    'indexes' => array(
+      'form_number' => array('number'),
+    ),
+    
+    
+    'primary key' => array('fe_id'),
+  );
+  return $schema;
+}

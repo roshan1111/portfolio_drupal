@@ -1,0 +1,18 @@
+.view-front-slide-show .views-field-title{
+	position:absolute;
+	bottom:35px;
+	right:0px;
+	text-align:center;
+	background-color:white;
+	opacity:0.5;
+	width: 235px;
+   
+}
+.view-front-slide-show { margin-left:111px; }
+
+.views-field-counter.view-front-slide-show {
+	float:left;
+	padding:10px 5px;
+	background-color:red;
+}
+
